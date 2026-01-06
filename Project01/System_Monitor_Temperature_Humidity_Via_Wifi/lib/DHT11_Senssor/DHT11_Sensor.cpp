@@ -6,6 +6,8 @@ static DHT dht_sensor(DHT_PIN, DHT_TYPE);
 
 void dht_init() {
     dht_sensor.begin();
+    pinMode(DHT_PIN, INPUT);
+    digitalWrite(DHT_PIN, HIGH);
     Serial.println("DHT11 sensor initialize");
 }
 

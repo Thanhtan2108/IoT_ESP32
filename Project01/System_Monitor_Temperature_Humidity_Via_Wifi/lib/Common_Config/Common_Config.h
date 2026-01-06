@@ -14,4 +14,8 @@ constexpr const char* PASSWORD_WIFI = "12345678";
 
 #define DHT_PIN 4
 
+
+// Timeout
+#define SENSOR_READ_INTERVAL 2000UL  // 2 giây
+
 #endif
