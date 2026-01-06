@@ -12,4 +12,6 @@ constexpr const char* PASSWORD_WIFI = "12345678";
 
 #define LED_STATUS_WIFI 2
 
+#define DHT_PIN 4
+
 #endif
