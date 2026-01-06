@@ -3,6 +3,7 @@
 #include <Connect_Wifi.h>
 #include <DHT11_Sensor.h>
 #include <OLED_I2C.h>
+#include <Send_Data_Firebase.h>
 
 static float current_temperature = 0.0;
 static float current_humidity = 0.0;
@@ -23,6 +24,9 @@ void setup() {
 
   // Initialize WiFi
   wifi_init();
+
+  // Initialize Firebase (sau khi WiFi đã được khởi tạo)
+  firebase_init();
 
   // Initialize dht_sensor
   dht_init();
@@ -65,6 +69,9 @@ void read_data_sensor() {
       Serial.print("°C, Humidity: ");
       Serial.print(humidity);
       Serial.println("%");
+
+      // Gửi dữ liệu lên Firebase (theo kiểu thủ tục C)
+      firebase_send_sensor_data(current_temperature, current_humidity);
     } else {
       Serial.println("Invalid sensor reading!");
     }
@@ -76,11 +83,10 @@ void read_data_sensor() {
 void update_display() {
   unsigned long current_time = millis();
   if (current_time - last_display_update_time >= 1000) { // Update every second
-    if (wifi_is_connected()) {
+    if (dht_is_valid_read(current_temperature, current_humidity)) {
       oled_display_data(current_temperature, current_humidity, 0, 0);
     } else {
-      oled_display_message("WiFi Disconnected", 0, 0);
-      oled_display_message("Reconnecting...", 5, 0);
+      oled_display_message("Invalid sensor reading!", 0, 0);
     }
 
     last_display_update_time = current_time; 

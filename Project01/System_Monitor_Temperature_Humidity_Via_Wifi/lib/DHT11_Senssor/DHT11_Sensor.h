@@ -3,6 +3,10 @@
 
 #include "DHT.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // select DHT sensor type
 #define DHT_TYPE DHT11
 
@@ -10,5 +14,9 @@ void dht_init();
 float dht_read_temperature();
 float dht_read_humidity();
 bool dht_is_valid_read(float temperature, float humidity);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
