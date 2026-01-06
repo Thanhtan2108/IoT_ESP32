@@ -2,18 +2,25 @@
 #include <Common_Config.h>
 #include <Connect_Wifi.h>
 #include <DHT11_Sensor.h>
+#include <OLED_I2C.h>
 
+static float current_temperature = 0.0;
+static float current_humidity = 0.0;
 static unsigned long last_sensor_read_time = 0;
+static unsigned long last_display_update_time = 0;
 
 void manager_status_connect_wifi();
 void read_data_sensor();
+void update_display();
 
 void setup() {
   Serial.begin(115200);
   delay(100);
 
   Serial.println("\n=== ESP32 Temperature & Humidity Monitor ===");
-    
+  // Initialize oled_i2c
+  oled_init();
+
   // Initialize WiFi
   wifi_init();
 
@@ -26,6 +33,7 @@ void setup() {
 void loop() {
   manager_status_connect_wifi();
   read_data_sensor();
+  update_display();
 }
 
 void manager_status_connect_wifi() {
@@ -48,7 +56,10 @@ void read_data_sensor() {
     float temperature = dht_read_temperature();
     float humidity = dht_read_humidity();
 
-    if (dht_is_valid_read(temperature, humidity)) {      
+    if (dht_is_valid_read(temperature, humidity)) {
+      current_temperature = temperature;
+      current_humidity = humidity;
+
       Serial.print("Temperature: ");
       Serial.print(temperature);
       Serial.print("°C, Humidity: ");
@@ -59,5 +70,19 @@ void read_data_sensor() {
     }
         
     last_sensor_read_time = current_time;
+  }
+}
+
+void update_display() {
+  unsigned long current_time = millis();
+  if (current_time - last_display_update_time >= 1000) { // Update every second
+    if (wifi_is_connected()) {
+      oled_display_data(current_temperature, current_humidity, 0, 0);
+    } else {
+      oled_display_message("WiFi Disconnected", 0, 0);
+      oled_display_message("Reconnecting...", 5, 0);
+    }
+
+    last_display_update_time = current_time; 
   }
 }
