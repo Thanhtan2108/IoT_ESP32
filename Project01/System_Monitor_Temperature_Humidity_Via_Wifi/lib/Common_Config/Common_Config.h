@@ -45,8 +45,8 @@ extern const char* FIREBASE_USER_PASSWORD;
 
 // Threshold
 // Ngưỡng thay đổi tối thiểu để coi là "có thay đổi" (tránh nhiễu cảm biến)
-#define TEMPERATURE_THRESHOLD 0.5f  // 0.5°C
-#define HUMIDITY_THRESHOLD 0.5f     // 0.5%
+#define TEMPERATURE_THRESHOLD 0.1f  // 0.1°C
+#define HUMIDITY_THRESHOLD 0.1f     // 0.1%
 
 #ifdef __cplusplus
 }

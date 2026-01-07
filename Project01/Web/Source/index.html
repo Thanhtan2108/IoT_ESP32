@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ Thống Giám Sát Nhiệt Độ & Độ Ẩm</title>
+    <meta
+      name="description"
+      content="Hệ thống giám sát nhiệt độ và độ ẩm thời gian thực sử dụng ESP32"
+    />
+    <meta name="author" content="Monitoring System" />
+
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Link file CSS -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Header Section -->
+    <header>
+      <div class="header-container">
+        <div class="logo-section">
+          <div class="logo-icon">
+            <i class="fas fa-temperature-high fa-2x"></i>
+          </div>
+          <div class="logo-text">
+            <h1>Hệ Thống Giám Sát</h1>
+            <p class="subtitle">Nhiệt độ & Độ ẩm thời gian thực</p>
+          </div>
+        </div>
+
+        <div class="status-section">
+          <div class="connection-status">
+            <span class="status-indicator online"></span>
+            <div class="status-text">
+              <span class="status-title">Trạng thái</span>
+              <span class="status-value">Chưa kết nối</span>
+            </div>
+          </div>
+
+          <div class="last-update">
+            <i class="far fa-clock"></i>
+            <div class="update-text">
+              <span class="update-title">Cập nhật</span>
+              <span class="update-time">--</span>
+            </div>
+          </div>
+
+          <button class="refresh-button">
+            <i class="fas fa-sync-alt"></i>
+            <span>Làm mới</span>
+          </button>
+
+          <!-- Dark Mode Toggle -->
+          <div class="dark-mode-toggle">
+            <label class="switch">
+              <input type="checkbox" id="dark-mode-switch" />
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label">
+              <i class="fas fa-sun" id="dark-mode-icon"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Current Readings Section -->
+      <section class="current-readings-section">
+        <div class="section-header">
+          <h2><i class="fas fa-chart-line"></i> Thông số hiện tại</h2>
+          <div class="timestamp">
+            Dữ liệu cập nhật: <span class="data-time">--</span>
+          </div>
+        </div>
+
+        <div class="readings-grid">
+          <!-- Temperature Card -->
+          <div class="reading-card temperature">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-thermometer-half"></i>
+                <h3>Nhiệt độ</h3>
+              </div>
+              <div class="card-trend">
+                <span class="trend-indicator"></span>
+                <span class="trend-text">--</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="main-value">
+                <span class="value">--</span>
+                <span class="unit">°C</span>
+              </div>
+              <div class="additional-info">
+                <div class="info-item">
+                  <span class="info-label">Cao nhất:</span>
+                  <span class="info-value">--</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Thấp nhất:</span>
+                  <span class="info-value">--</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <div class="status-indicator normal">
+                <span class="status-dot"></span>
+                <span class="status-text">--</span>
+              </div>
+              <div class="last-read">
+                Đo lúc: <span class="read-time">--</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Humidity Card -->
+          <div class="reading-card humidity">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-tint"></i>
+                <h3>Độ ẩm</h3>
+              </div>
+              <div class="card-trend">
+                <span class="trend-indicator"></span>
+                <span class="trend-text">--</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="main-value">
+                <span class="value">--</span>
+                <span class="unit">%</span>
+              </div>
+              <div class="additional-info">
+                <div class="info-item">
+                  <span class="info-label">Cao nhất:</span>
+                  <span class="info-value">--</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Thấp nhất:</span>
+                  <span class="info-value">--</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <div class="status-indicator normal">
+                <span class="status-dot"></span>
+                <span class="status-text">--</span>
+              </div>
+              <div class="last-read">
+                Đo lúc: <span class="read-time">--</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comfort Index Card -->
+          <div class="reading-card comfort">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-smile"></i>
+                <h3>Chỉ số thoải mái</h3>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="comfort-display">
+                <div class="comfort-icon">
+                  <i class="fas fa-thumbs-up"></i>
+                </div>
+                <div class="comfort-text">
+                  <span class="comfort-level">--</span>
+                  <span class="comfort-score">--</span>
+                </div>
+              </div>
+              <div class="comfort-details">
+                <div class="detail-item">
+                  <span class="detail-label">Nhiệt độ cảm giác:</span>
+                  <span class="detail-value">--</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Điểm sương:</span>
+                  <span class="detail-value">--</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <div class="comfort-recommendation">Chờ dữ liệu từ thiết bị</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Charts Section -->
+      <section class="charts-section">
+        <div class="section-header">
+          <h2><i class="fas fa-chart-area"></i> Biểu đồ dữ liệu</h2>
+          <div class="chart-controls">
+            <select class="time-range-selector">
+              <option value="1h">1 giờ qua</option>
+              <option value="6h">6 giờ qua</option>
+              <option value="24h" selected>24 giờ qua</option>
+              <option value="7d">7 ngày qua</option>
+            </select>
+            <button class="chart-export">
+              <i class="fas fa-download"></i>
+              <span>Xuất dữ liệu</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="charts-container">
+          <div class="chart-wrapper">
+            <div class="chart-header">
+              <h3>Diễn biến nhiệt độ</h3>
+              <div class="chart-stats">
+                <span class="stat-item">Trung bình: <strong>--</strong></span>
+                <span class="stat-item">Dao động: <strong>--</strong></span>
+              </div>
+            </div>
+            <div class="chart-placeholder">
+              <canvas></canvas>
+            </div>
+          </div>
+
+          <div class="chart-wrapper">
+            <div class="chart-header">
+              <h3>Diễn biến độ ẩm</h3>
+              <div class="chart-stats">
+                <span class="stat-item">Trung bình: <strong>--</strong></span>
+                <span class="stat-item">Dao động: <strong>--</strong></span>
+              </div>
+            </div>
+            <div class="chart-placeholder">
+              <canvas></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+  </body>
+</html>
