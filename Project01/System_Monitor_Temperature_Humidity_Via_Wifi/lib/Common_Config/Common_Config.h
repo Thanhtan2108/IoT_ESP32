@@ -1,6 +1,8 @@
 #ifndef COMMON_CONFIG_H
 #define COMMON_CONFIG_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -42,11 +44,13 @@ extern const char* FIREBASE_USER_PASSWORD;
 // Timeout
 #define SENSOR_READ_INTERVAL 2000UL  // 2 giây
 #define FIREBASE_SEND_INTERVAL_MS  5000UL // 5 giây
+extern const uint32_t WIFI_CHECK_INTERVAL_MS;
+extern const uint32_t DISPLAY_UPDATE_INTERVAL_MS;
 
 // Threshold
 // Ngưỡng thay đổi tối thiểu để coi là "có thay đổi" (tránh nhiễu cảm biến)
 #define TEMPERATURE_THRESHOLD 0.1f  // 0.1°C
-#define HUMIDITY_THRESHOLD 0.1f     // 0.1%
+#define HUMIDITY_THRESHOLD 1.0f     // 1.0%
 
 #ifdef __cplusplus
 }

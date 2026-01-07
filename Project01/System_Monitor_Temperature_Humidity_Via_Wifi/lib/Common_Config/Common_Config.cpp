@@ -3,6 +3,9 @@
 const char* SSID_WIFI = "Thanhtan";
 const char* PASSWORD_WIFI = "12345678";
 
+const uint32_t WIFI_CHECK_INTERVAL_MS = 2000;
+const uint32_t DISPLAY_UPDATE_INTERVAL_MS = 1000;
+
 // ================================
 // Cấu hình Firebase (bạn sửa lại cho đúng với project của mình)
 // ================================

@@ -22,12 +22,12 @@ void oled_init() {
     Serial.println("OLED initialized");
 }
 
-void oled_display_data(float temperature, float humidity, uint8_t row, uint8_t col) {
+void oled_display_data(float temperature, float humidity, uint8_t col, uint8_t row) {
     display.clearDisplay();
-    display.setCursor(row, col);
+    display.setCursor(col, row);
     
-    display.setTextSize(1.5);
-    display.println("Temp & Humidity");
+    display.setTextSize(1.7);
+    display.println("Temp & Humi");
     display.println("---------------");
     display.println();
     
@@ -43,10 +43,10 @@ void oled_display_data(float temperature, float humidity, uint8_t row, uint8_t c
     display.display();
 }
 
-void oled_display_message(const char* message, uint8_t row, uint8_t col) {
+void oled_display_message(const char* message, uint8_t col, uint8_t row) {
     display.clearDisplay();
     display.setTextSize(1);
-    display.setCursor(row, col);
+    display.setCursor(col, row);
     
     display.println(message);
     
