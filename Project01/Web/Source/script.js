@@ -336,7 +336,7 @@ function updateHumidity(value) {
     const trendText = trendElement.querySelector(".trend-text");
 
     if (trendIndicator && trendText) {
-      if (Math.abs(diff) > 0.5) {
+      if (Math.abs(diff) > 0.1) {
         if (diff > 0) {
           trendIndicator.className = "trend-indicator up";
           trendText.textContent = `Tăng ${Math.abs(diff).toFixed(1)}%`;
