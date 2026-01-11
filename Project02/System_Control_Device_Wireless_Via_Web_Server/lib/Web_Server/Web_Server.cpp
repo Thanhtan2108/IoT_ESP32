@@ -15,7 +15,7 @@ bool pumpState = false;
 - Phần trong ngoặc "rawliteral" gọi là delimiter. Nó giúp compiler biết đâu là điểm bắt đầu và kết thúc của chuỗi, tránh nhầm lẫn nếu trong nội dung có dấu )".
 - Nội dung giữa ( và ) sẽ được giữ nguyên y như bạn viết, kể cả xuống dòng, dấu " hay ký tự đặc biệt.
 */
-// HTML (rút gọn)
+// HTML CSS JS
 const char MAIN_PAGE[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html>
@@ -23,23 +23,132 @@ const char MAIN_PAGE[] PROGMEM = R"rawliteral(
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
         <title>ESP32 Dashboard</title>
+
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background: #f2f4f8;
+                color: #333;
+            }
+
+            h1 {
+                text-align: center;
+                padding: 16px;
+                margin: 0;
+                background: #2b6cb0;
+                color: white;
+            }
+
+            .container {
+                max-width: 480px;
+                margin: 20px auto;
+                padding: 10px;
+            }
+
+            .card {
+                background: white;
+                border-radius: 10px;
+                padding: 16px;
+                margin-bottom: 16px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .device-info {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .device-name {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 4px;
+            }
+
+            .status {
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .status.on {
+                color: #38a169;
+            }
+
+            .status.off {
+                color: #e53e3e;
+            }
+
+            button {
+                border: none;
+                padding: 10px 16px;
+                border-radius: 6px;
+                font-size: 14px;
+                cursor: pointer;
+                color: white;
+            }
+
+            button.toggle {
+                background: #3182ce;
+            }
+
+            button.toggle:hover {
+                background: #2b6cb0;
+            }
+
+            @media (max-width: 480px) {
+                .card {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                }
+
+                button {
+                    width: 100%;
+                }
+            }
+        </style>
     </head>
     <body>
-        <h1>Dashboard</h1>
-        LED: <span id="led">%LED%</span>
-        <button onclick="fetch('/led/toggle')">Toggle LED</button><br>
-        FAN: <span id="fan">%FAN%</span>
-        <button onclick="fetch('/fan/toggle')">Toggle FAN</button><br>
-        PUMP: <span id="pump">%PUMP%</span>
-        <button onclick="fetch('/pump/toggle')">Toggle PUMP</button><br>
+        <h1>ESP32 Dashboard</h1>
 
+        <div class="container">
+
+            <div class="card">
+                <div class="device-info">
+                    <div class="device-name">LED</div>
+                    <div id="led" class="status">%LED%</div>
+                </div>
+                <button class="toggle" onclick="fetch('/led/toggle')">Toggle</button>
+            </div>
+
+            <div class="card">
+                <div class="device-info">
+                    <div class="device-name">FAN</div>
+                    <div id="fan" class="status">%FAN%</div>
+                </div>
+                <button class="toggle" onclick="fetch('/fan/toggle')">Toggle</button>
+            </div>
+
+            <div class="card">
+                <div class="device-info">
+                    <div class="device-name">PUMP</div>
+                    <div id="pump" class="status">%PUMP%</div>
+                </div>
+                <button class="toggle" onclick="fetch('/pump/toggle')">Toggle</button>
+            </div>
+
+        </div>
+        
         <script>
             async function refresh() {
                 try {
                     const r = await fetch('/status');
                     const j = await r.json();
                     document.getElementById('led').textContent = j.led ? 'ON' : 'OFF';
-                    document.getElementById('fan').textContent = j.fan ? 'ON' : 'OFF';
+                    document.getElementById('fan').textContent = j.fan ? 'OFF' : 'ON';
                     document.getElementById('pump').textContent = j.pump ? 'ON' : 'OFF';
                 } catch(e){ 
                     console.error(e);
@@ -92,7 +201,7 @@ void handlePumpToggle() {
 void handleStatus() {
     String payload = "{";
     payload += "\"led\":"; payload += ledState ? "true" : "false"; payload += ",";
-    payload += "\"fan\":"; payload += fanState ? "false" : "true"; payload += ",";
+    payload += "\"fan\":"; payload += fanState ? "true" : "false"; payload += ",";
     payload += "\"pump\":"; payload += pumpState ? "true" : "false"; payload += ",";
     payload += "\"ip\":\""; payload += WiFi.localIP().toString(); payload += "\"";
     payload += "}";
