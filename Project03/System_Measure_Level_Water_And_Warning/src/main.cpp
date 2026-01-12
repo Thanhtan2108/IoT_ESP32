@@ -1,21 +1,19 @@
 #include <Arduino.h>
 #include "Common_Config.h"
 #include "OLED_I2C.h"
+#include "Control_Led_Single.h"
+
+led_single_t led_warning {
+  .pin = LED_WARNING
+};
 
 void setup() {
   Serial.begin(115200);
   delay(100);
 
-  oled_init();
-  oled_clear();
+  led_single_init(&led_warning);
 }
 
 void loop() {
-  for (float i = 0 ; i < 10.0 ; i++) {
-    oled_display_data(i, 0, 20);
-    delay(500);
-    if (i == 9.0) {
-      i = 0;
-    }
-  }
+  led_single_blink(&led_warning, 500);
 }

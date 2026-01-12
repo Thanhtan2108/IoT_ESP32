@@ -1,6 +1,8 @@
 #ifndef COMMON_CONFIG_H
 #define COMMON_CONFIG_H
 
+#include <Arduino.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
