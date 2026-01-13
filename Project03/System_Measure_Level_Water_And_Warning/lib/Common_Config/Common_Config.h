@@ -14,8 +14,8 @@ extern const char* PASSWORD_WIFI;
 
 #define BUZZER_WARNING 13
 
-#define ECHO_SR04_PIN 18
-#define TRIG_SR04_PIN 19
+#define ECHO_SR04_PIN 5
+#define TRIG_SR04_PIN 18
 
 #define SDA_PIN 21
 #define SCL_PIN 22

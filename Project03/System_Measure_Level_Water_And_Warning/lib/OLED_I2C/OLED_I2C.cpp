@@ -34,7 +34,7 @@ void oled_display_data(float level_water, uint8_t col, uint8_t row) {
     display.setTextSize(1);
     display.print("Level_Water: ");
     display.print(level_water, 1);
-    display.println(" m");
+    display.println(" cm");
     
     display.display();
 }
