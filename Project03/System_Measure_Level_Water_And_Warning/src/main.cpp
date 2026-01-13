@@ -4,6 +4,8 @@
 #include "Control_Led_Single.h"
 #include "Control_Buzzer.h"
 #include "HC_SR04_Sensor.h"
+#include "Connect_Wifi.h"
+#include "Web_Server.h"
 
 float distanceCM;
 
@@ -23,13 +25,15 @@ void setup() {
   buzzer_init(&buzzer_warning);
   oled_init();
   hc_sr04_sensor_init(TRIG_SR04_PIN, ECHO_SR04_PIN);
+  wifi_init();
+  register_for_route_web_server();
 }
 
 void loop() {
   distanceCM = hc_sr04_sensor_measureDistanceCM(TRIG_SR04_PIN, ECHO_SR04_PIN);
   if (distanceCM > 0 && distanceCM < 100) {
     oled_display_data(distanceCM, 0, 0);
-    if (distanceCM <= 10) {
+    if (distanceCM <= threshold_cm) {
       led_single_on(&led_warning);
       buzzer_on(&buzzer_warning);
     } else {
@@ -40,4 +44,6 @@ void loop() {
     oled_display_message("Distance Exceeded", 2, 0, 0);
   }
   delay(500);
+
+  run_web_server();
 }
