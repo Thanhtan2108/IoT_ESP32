@@ -1,6 +1,9 @@
 #include "Web_Server.h"
+#include <Preferences.h>
 
-int threshold_cm;
+Preferences prefs;
+
+int threshold_cm = 5;
 
 // tạo đối tượng làm việc với web server qua port 80 (http)
 WebServer server(80);
@@ -164,6 +167,7 @@ void handleSetThreshold() {
         int v = server.arg("value").toInt();
         if (v >= 0 && v <= 10) {
             threshold_cm = v;
+            prefs.putInt("threshold", threshold_cm); // 🔥 LƯU FLASH
         }
     }
     server.send(200, "text/plain", "OK");
@@ -181,10 +185,16 @@ void handleNotFound() {
 
 // Đăng ký route lên web, gắn handler với route tương ứng bằng phương thức http thích hợp
 void register_for_route_web_server() {
+    prefs.begin("water_cfg", false);
+
+    // load ngưỡng đã lưu, nếu chưa có thì lấy 5
+    threshold_cm = prefs.getInt("threshold", 5);
+
     server.on("/", HTTP_GET, handleRoot);
     server.on("/status", HTTP_GET, handleStatus);
     server.on("/set_threshold", HTTP_GET, handleSetThreshold);
     server.onNotFound([](){ server.send(404, "text/plain", "Not Found"); });
+
     server.begin();
     Serial.println("HTTP server started");
 }
