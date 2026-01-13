@@ -7,20 +7,37 @@
 
 float distanceCM;
 
+led_single_t led_warning {
+  .pin = LED_WARNING
+};
+
+buzzer_t buzzer_warning {
+  .pin = BUZZER_WARNING
+};
 
 void setup() {
   Serial.begin(115200);
   delay(100);
 
+  led_single_init(&led_warning);
+  buzzer_init(&buzzer_warning);
   oled_init();
   hc_sr04_sensor_init(TRIG_SR04_PIN, ECHO_SR04_PIN);
 }
 
 void loop() {
   distanceCM = hc_sr04_sensor_measureDistanceCM(TRIG_SR04_PIN, ECHO_SR04_PIN);
-  oled_display_data(distanceCM, 0, 0);
-  Serial.print("Distance: ");
-  Serial.print(distanceCM);
-  Serial.println(" cm");
+  if (distanceCM > 0 && distanceCM < 100) {
+    oled_display_data(distanceCM, 0, 0);
+    if (distanceCM <= 10) {
+      led_single_on(&led_warning);
+      buzzer_on(&buzzer_warning);
+    } else {
+      led_single_off(&led_warning);
+      buzzer_off(&buzzer_warning);     
+    }
+  } else {
+    oled_display_message("Distance Exceeded", 2, 0, 0);
+  }
   delay(500);
 }
